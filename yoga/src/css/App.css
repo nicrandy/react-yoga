@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  padding: 0rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#message{
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+}
+.PoseAndCam{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.PoseImage{
+  height: 500px;
+}
+/* yoga pose image */
+.yogaImage{
+  position: relative;
+  z-index: 0;
+  left: 0;
+  top: 0;
+  height: 500px;
+}
+
+#imageOverlay{
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.webcam{
+  position: relative;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
