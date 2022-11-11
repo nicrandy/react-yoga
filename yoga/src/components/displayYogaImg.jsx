@@ -7,11 +7,13 @@ export const DispImage = (props) => {
   let currentPose = props.currentPose;
   let side = "front";
 
-  var imageFileBaseLocation = 'https://f004.backblazeb2.com/file/yogaImages/BeginnerPoses/'
+  // var imageFileBaseLocation = 'https://f004.backblazeb2.com/file/yogaImages/BeginnerPoses/'
+  var imageFileBaseLocation = 'src/workouts/BeginnerPoses/'
+
+
   
   for (let i = 0; i < data.length; i++) {
     if (data[i].PoseNumber == currentPose && data[i].FrontOrSide == side) {
-      console.log("img location: ", data[i].RelativeLocation);
       imageFileBaseLocation += data[i].RelativeLocation;
       break;
     }

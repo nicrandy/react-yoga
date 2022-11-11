@@ -15,15 +15,10 @@ export const DrawLines = (props) => {
     canvasElement.height = props.height;
     canvasCtx.save();
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-    // canvasCtx.drawImage(
-    //   props.image.image,
-    //   0,
-    //   0,
-    //   canvasElement.width,
-    //   canvasElement.height
-    // );
     canvasCtx.restore();
     drawLandmarkLines(canvasRef.current, canvasCtx, props.landmarks);
+    drawBoundingBox(canvasRef.current, canvasCtx, props.boundingBox);
+    drawConfirmationCircles(canvasRef.current, canvasCtx, props.landmarks);
   }
 
   function convertLandmarkObjectToArray(landmarks) {
@@ -106,6 +101,102 @@ export const DrawLines = (props) => {
       userContext.lineTo(xFinish, yFinish);
       userContext.stroke();
     });
+  }
+
+  function drawBoundingBox(canvas, context, boundingBox) {
+    const userCanvas = canvas;
+    const userContext = context;
+    // draw lines around bounding box
+    userContext.beginPath();
+    userContext.strokeStyle = "rgba(0,0,0,0.5)";
+    userContext.lineWidth = 10;
+    userContext.lineCap = "round";
+    let xStart = Math.round(boundingBox.minX * userCanvas.width);
+    let yStart = Math.round(boundingBox.minY * userCanvas.height);
+    let x2 = Math.round(boundingBox.maxX * userCanvas.width);
+    let y2 = Math.round(boundingBox.minY * userCanvas.height);
+    let x3 = Math.round(boundingBox.maxX * userCanvas.width);
+    let y3 = Math.round(boundingBox.maxY * userCanvas.height);
+    let x4 = Math.round(boundingBox.minX * userCanvas.width);
+    let y4 = Math.round(boundingBox.maxY * userCanvas.height);
+    userContext.moveTo(xStart, yStart);
+    userContext.lineTo(x2, y2);
+    userContext.lineTo(x3, y3);
+    userContext.lineTo(x4, y4);
+    userContext.lineTo(xStart, yStart);
+    userContext.stroke();
+  }
+
+  function drawConfirmationCircles(canvas, context, landmarks){
+    const userCanvas = canvas;
+    const userContext = context;
+    let currentLandmarksArray = convertLandmarkObjectToArray(landmarks);
+
+    let circleDiameterRatio = .25;
+    let currentTime = Date.now();
+    let alphaValue = 0.05;
+    let circlFillColor = 'rgba(0,255,50,' + alphaValue + ')';
+
+    let nearHeadCircleDiameter = parseInt(Math.abs(currentLandmarksArray[11][0] - currentLandmarksArray[12][0]) * userCanvas.width * circleDiameterRatio);
+    let leftX = parseInt(currentLandmarksArray[11][0] * userCanvas.width); // left shoulder
+    let leftY = parseInt(currentLandmarksArray[3][1] * userCanvas.height); // left eye
+    let rightX = parseInt(currentLandmarksArray[12][0] * userCanvas.width); // right shoulder
+    let rightY = parseInt(currentLandmarksArray[6][1] * userCanvas.height); // right eye
+    
+
+    userContext.linewidth = 100;
+    userContext.fillStyle = circlFillColor
+    userContext.strokeStyle = 'rgb(0, 200, 0)';
+    userContext.beginPath();
+    userContext.arc(leftX, leftY, nearHeadCircleDiameter, 0, 2 * Math.PI);
+    userContext.closePath();
+    userContext.fill();
+    userContext.stroke();
+    userContext.fillStyle = circlFillColor
+    userContext.strokeStyle = 'rgb(200, 0, 0)';
+    userContext.beginPath();
+    userContext.arc(rightX, rightY, nearHeadCircleDiameter, 0, 2 * Math.PI);
+    userContext.closePath();
+    userContext.fill();
+    userContext.stroke();
+
+    // Draw the circles for the center of hands
+    // get the center of the users right and left hand, mid point between pinky and thumb
+    let RightHandCenterX = ((currentLandmarksArray[22][0] - currentLandmarksArray[18][0]) / 2) + currentLandmarksArray[18][0];
+    let RightHandCenterY = ((currentLandmarksArray[22][1] - currentLandmarksArray[18][1]) / 2) + currentLandmarksArray[18][1];
+    let LeftHandCenterX = ((currentLandmarksArray[21][0] - currentLandmarksArray[17][0]) / 2) + currentLandmarksArray[17][0];
+    let LeftHandCenterY = ((currentLandmarksArray[21][1] - currentLandmarksArray[17][1]) / 2) + currentLandmarksArray[17][1];
+    const circleDiameter = 20;
+    userContext.fillStyle = circlFillColor;
+    userContext.strokeStyle = 'green';
+    userContext.beginPath();
+    userContext.arc(LeftHandCenterX * userCanvas.width, LeftHandCenterY * userCanvas.height, circleDiameter, 0, 2 * Math.PI);
+    userContext.closePath();
+    userContext.fill();
+    userContext.stroke();
+    userContext.fillStyle = circlFillColor;
+    userContext.strokeStyle = 'red';
+    userContext.beginPath();
+    userContext.arc(RightHandCenterX * userCanvas.width, RightHandCenterY * userCanvas.height, circleDiameter, 0, 2 * Math.PI);
+    userContext.closePath();
+    userContext.fill();
+    userContext.stroke();
+    
+    // check if the rightHandCenterX and LeftHandCenterX are within the nearHeadCircleDiameter area
+    let leftx = LeftHandCenterX;
+    let lefty = LeftHandCenterY;
+    let leftcircleX = currentLandmarksArray[11][0];
+    let leftcircleY = currentLandmarksArray[3][1];
+    let leftrad = Math.abs(currentLandmarksArray[11][0] - currentLandmarksArray[12][0]) * circleDiameterRatio;
+    let rightx = RightHandCenterX;
+    let righty = RightHandCenterY;
+    let rightcircleX = currentLandmarksArray[12][0];
+    let rightcircleY = currentLandmarksArray[6][1];
+    let rightrad = Math.abs(currentLandmarksArray[11][0] - currentLandmarksArray[12][0]) * circleDiameterRatio;
+    if (((leftx - leftcircleX) * (leftx - leftcircleX) + (lefty - leftcircleY) * (lefty - leftcircleY) <= leftrad * leftrad) &&
+        ((rightx - rightcircleX) * (rightx - rightcircleX) + (righty - rightcircleY) * (righty - rightcircleY) <= rightrad * rightrad)) {
+        console.log("in confirmation circles")
+    }
   }
 
   return <canvas id="landmarkLinesCanvas" ref={canvasRef} />;

@@ -1,0 +1,84 @@
+﻿[
+    {
+        "Folder_name": "Sun_Salutation",
+        "Instructor": "Fatima",
+        "NumOfPoses": "12",
+        "Rating": "4.3",
+        "Workout_name": "Sun Salutation",
+        "Description": "Pre yoga workout stretches",
+        "Difficulty": "Beginner",
+        "Display_images": "8_left_Downward_facing_dog_left.png,7_left_Upward_facing_dog_left.png,2_front_Arm_Extended.png",
+        "Best_pose_image": "1_front_Standing_Mountain,2_front_Arm_Extended,3_left_Standing_Forward_Bend,4_left_Half_Forward_Bend,5_left_plank_left,6_left_left_half_plank_left,7_right_Upward_facing_dog_right,8_left_Downward_facing_dog_left,9_left_Half_Forward_Bend,10_left_Standing_Forward_Bend,11_front_Arm_Extended,12_front_Standing_Mountain_Pose",
+        "Pose_target_areas": "[[11],[11],[11,23],[11,13,23],[11,23],[11,13,23],[11,13,23],[11,13,23,25],[11,23],[11,13,25,23],[11],[11]]"
+    },
+    {
+        "Folder_name": "Yoga_stretch",
+        "Instructor": "Fatima",
+        "NumOfPoses": "9",
+        "Rating": "4.4",
+        "Workout_name": "Yoga Stretch",
+        "Description": "Stretching exercises",
+        "Difficulty": "Beginner",
+        "Display_images": "1_stretching_front.png,3_stretching_right.png,8_stretching_left.png",
+        "Best_pose_image": "1_stretching_front,2_stretching_left,3_stretching_right,4_stretching_left,5_stretching_left,6_stretching_left,7_stretching_left,8_stretching_front,9_stretching_front",
+        "Pose_target_areas": "[[11,13,23,25],[11,23,25],[11,13,23,25],[11,13,23,25],[11,23,25],[11,23,25],[11,23,25],[11,13,23,25],[11,13,23,25]]"
+    },
+    {
+        "Folder_name": "abs",
+        "Instructor": "Randy",
+        "NumOfPoses": "9",
+        "Rating": "4.1",
+        "Workout_name": "Abs and Back",
+        "Description": "Target abs and lower back",
+        "Difficulty": "Intermediate",
+        "Display_images": "1_left.png,9_right.png,6_front.png",
+        "Best_pose_image": "1_front,2_left,3_left,4_left,5_left,6_front,7_left,8_right,9_right",
+        "Pose_target_areas": "[[11,23,25],[11,13,23],[11,13,25],[11,23,25],[11,13,23],[11,23],[11,13,23],[11,13,23,25],[11,23]]"
+    },
+    {
+        "Folder_name": "BeginnerPoses",
+        "Instructor": "Fatima",
+        "NumOfPoses": "18",
+        "Rating": "4.8",
+        "Workout_name": "Beginner Yoga Poses",
+        "Description": "Some easy poses for people new to yoga",
+        "Difficulty": "Beginner",
+        "Display_images": "5_right_Warrior.png,7_front.png,15_left.png",
+        "Best_pose_image": "1_extra_front_Standing_Mountain,2_front_tree,3_front,4_left,5_right_Warrior,6_front,7_front,8_front,9_front,10_front,11_front,12_left,13_left,14_right,15_left,16_right,17_left,18_right",
+        "Pose_target_areas": "[[11],[11,13,23,25],[11,13,23,25],[11,23,25],[11,23,25],[11,13,23,25],[11,13,23,25],[11,13,23,25],[11,13,23,25],[11,13,23,25],[11,13,23,25],[11,23,25,27],[11,13,23,25],[11,13,23,25],[11,13,23,25],[11,13,23,25],[11,13,23,25],[11,13,23,25]]"
+    },
+    {
+        "Folder_name": "Test",
+        "Instructor": "Test",
+        "NumOfPoses": "1",
+        "Rating": "3",
+        "Workout_name": "Test",
+        "Description": "Test",
+        "Difficulty": "Advanced",
+        "Display_images": "1_front_Standing_Mountain.png,2_right.png",
+        "Best_pose_image": "1_front_Standing_Mountain,2_right",
+        "Pose_target_areas": "[[11,13],[11,13,25,23]]"
+    },
+    {
+        "Folder_name": "Intermediate_poses_lvl1",
+        "Instructor": "Fatima",
+        "NumOfPoses": "17",
+        "Rating": "4.5",
+        "Workout_name": "Intermediate Yoga 1",
+        "Description": "Some intermediate level yoga poses",
+        "Difficulty": "Intermediate",
+        "Display_images": "12_front_goddess.png,2_right_side_warrior_one.png,15_front_left_side_ninja_squat.png",
+        "Best_pose_image": "1_left_down_dog,2_left_right_side_warrior_one,3_right_side_humble_warrior,4_right_side_lizard,5_right_down_dog,6_right_right_side_warrior_one,7_left_side_humble_warrior,8_left_side_lizard,9_right_down_dog,10_front_garland,11_right_Standing_Mountain,12_front_goddess,13_front_wide_legged_ standing_forward_bend,14_front_right_side_ninja_squat,15_front_left_side_ninja_squat,16_right_frog,17_right_child"
+    },
+    {
+        "Folder_name": "Intermediate_poses_lvl2",
+        "Instructor": "Fatima",
+        "NumOfPoses": "11",
+        "Rating": "4.6",
+        "Workout_name": "Intermediate Yoga 2",
+        "Description": "Some intermediate level yoga poses",
+        "Difficulty": "Intermediate",
+        "Display_images": "10_left_right_side_warrior_three.png,3_front_left_side_eagle.png,8_front_right_side_half_chair.png",
+        "Best_pose_image": "1_right_chair,2_front_left_side_half_chair,3_front_left_side_eagle,4_right_left_side_warrior_three,5_left_high_lunge,6_right_down_dog,7_left_chair,8_front_right_side_half_chair,9_front_left_side_eagle,10_left_right_side_warrior_three,11_right_high_lunge"
+    }
+]
