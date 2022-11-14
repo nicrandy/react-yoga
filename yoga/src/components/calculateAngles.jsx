@@ -5,25 +5,7 @@ import data from "../workouts/BeginnerPoses/poseInfo.json";
 import "../css/calculateAngles.css";
 
 export const CalcAngles = (props) => {
-  const getData = () => {
-    fetch("../workouts/" +props.workoutData.Folder_name +"/poseInfo.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then(function (response) {
-        console.log(response);
-        return response.json();
-      })
-      .then(function (myJson) {
-        console.log(" this data: ", myJson);
-      });
-  };
-  useEffect(() => {
-    console.log("props.workoutData", props.workoutData.Folder_name);
-    getData();
-  }, [props.workoutData]);
+
   // take in landmarks and convert to 2D array [x,y,z,visibility]
   // 32 landmarks with 4 numerical locations each
   function convertLandmarkObjectToArray(landmarks) {
@@ -419,20 +401,27 @@ export const CalcAngles = (props) => {
   }
 
   if (props.landmarks !== undefined) {
-    // normalize the landmarks for target and user
+    // calculate the distances between user landmarks and target pose landmarks
     let normalizedUserLandmarks = NormalizeLandmarks(props.landmarks);
-    props.normalizedLandmarks(normalizedUserLandmarks[0]); // normalized landmarks
+    props.normalizedLandmarks(normalizedUserLandmarks[0]); // normalized user landmarks
     props.setBoundingBox(normalizedUserLandmarks[1]); // bounding box
-    let targetLandmarksObj = getTargetLandmarks();
-    let normalizedTargetLandmarks = NormalizeLandmarks(targetLandmarksObj);
-    // compare the locations of the landmarks
-    let landmarkDifferences = CompareLandmarks(
-      normalizedUserLandmarks[0],
-      normalizedTargetLandmarks[0]
-    );
+    let bestLandmarkDistance = 100000;
+    for (let i = 0; i < props.poseLandmarks.length; i++) {
+      let targetLandmarksObj = convertLandmarkArrayToObject(props.poseLandmarks[i]);
+      let normalizedTargetLandmarks = NormalizeLandmarks(targetLandmarksObj);
+      let landmarkDifferences = CompareLandmarks(
+        normalizedUserLandmarks[0],
+        normalizedTargetLandmarks[0]
+      );
+      let landmarkDistanceDifferenceScore = CalculateTotalDifference(landmarkDifferences);
+      if (landmarkDistanceDifferenceScore < bestLandmarkDistance) {
+        bestLandmarkDistance = landmarkDistanceDifferenceScore;
+      }
+    }
     let totalLandmarkDistanceScore =
-      100 - parseInt(CalculateTotalDifference(landmarkDifferences));
+      100 - parseInt(bestLandmarkDistance);
 
+    // calculate the angles for target and user
     let angles = CalculateAllAngles(props.landmarks);
     let angleNames = [
       "leftWristAngle",
@@ -458,24 +447,29 @@ export const CalcAngles = (props) => {
       "leftShoulderToHipsAngleToGround",
       "rightShoulderToHipsAngleToGround",
     ];
-    let targetPoseAngles = CalculateAllAngles(getTargetLandmarks());
-    let differences = [];
-    for (let i = 0; i < angles.length; i++) {
-      differences.push(Math.abs(angles[i] - targetPoseAngles[i]));
+    let bestAngleScore = 10000;
+    for (let i = 0; i < props.poseLandmarks.length; i++) {
+      let targetPoseAngles = CalculateAllAngles(convertLandmarkArrayToObject(props.poseLandmarks[i]));
+      let differences = [];
+      for (let i = 0; i < angles.length; i++) {
+        differences.push(Math.abs(angles[i] - targetPoseAngles[i]));
+      }
+      // get sum of differences
+      let sum = 0;
+      const differencesReducer = (accumulator, currentValue) =>
+        accumulator + currentValue;
+      sum = differences.reduce(differencesReducer);
+      if (sum < bestAngleScore) {
+        bestAngleScore = sum;
+      }
     }
-    // get sum of differences
-    let sum = 0;
-    const differencesReducer = (accumulator, currentValue) =>
-      accumulator + currentValue;
-    sum = differences.reduce(differencesReducer);
-    let score = parseInt(
-      (2000 - differences.reduce(differencesReducer)) / 10 - 50
-    );
+    let score = parseInt((2000 - bestAngleScore) / 10 - 50);
+
     props.scores([score, totalLandmarkDistanceScore]);
     return (
       <>
         <div className="DataDisplay">
-          <ul id="userData">
+          {/* <ul id="userData">
             {angles.map(function (angle, index) {
               return (
                 <h4 key={index}>
@@ -494,12 +488,7 @@ export const CalcAngles = (props) => {
               return <h4 key={index}>={angle}</h4>;
             })}
             Sum: {sum}
-          </ul>
-        </div>
-        <div className="ScoreDisplay">
-          <h1>
-            Score: {score} / {totalLandmarkDistanceScore}
-          </h1>
+          </ul> */}
         </div>
       </>
     );

@@ -80,5 +80,15 @@
         "Difficulty": "Intermediate",
         "Display_images": "10_left_right_side_warrior_three.png,3_front_left_side_eagle.png,8_front_right_side_half_chair.png",
         "Best_pose_image": "1_right_chair,2_front_left_side_half_chair,3_front_left_side_eagle,4_right_left_side_warrior_three,5_left_high_lunge,6_right_down_dog,7_left_chair,8_front_right_side_half_chair,9_front_left_side_eagle,10_left_right_side_warrior_three,11_right_high_lunge"
+    },
+    {
+        "Folder_name": "demo",
+        "Instructor": "Fatima",
+        "NumOfPoses": "6",
+        "Rating": "5",
+        "Workout_name": "Demo",
+        "Description": "Demo lesson",
+        "Difficulty": "Beginner",
+        "Best_pose_image": "1_front_tree,2_front,3_left,4_right_Warrior,5_front,6_front"
     }
 ]

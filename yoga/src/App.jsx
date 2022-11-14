@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import allData from "./assets/exerciseInfo.json"; // read the data from the json file
 
-
-
 import { Camera } from "@mediapipe/camera_utils";
 import {
   Pose,
@@ -23,8 +21,10 @@ import { DispImage } from "./components/displayYogaImg";
 function App() {
   // add data
   const [allWorkoutData, setAllWorkoutData] = useState([]); // data for all available workouts
-  const [workoutName, setWorkoutName] = useState("Sun_Salutation"); // folder name for workout
+  const [workoutName, setWorkoutName] = useState("demo"); // folder name for workout
   const [thisWorkoutData, setThisWorkoutData] = useState({}); // data for this workout only
+  const [thisWorkoutPoseLandmarks, setThisWorkoutPoseLandmarks] = useState({}); // data for this workout pose landmarks  
+  const [thisPoseLandmarks, setThisPoseLandmarks] = useState({}); // data for this pose landmarks
   // use state for loading message
   const [loadingMsg, setLoading] = useState("Loading AI Model...");
   const [currentOutput, setCurrentOutput] = useState(); // holds .image , .poseLandmarks , .poseWorldLandmarks
@@ -49,7 +49,6 @@ function App() {
       }
     }
   }
-
 
   useEffect(() => {
     setAllWorkoutData(allData);
@@ -81,15 +80,32 @@ function App() {
         return response.json();
       })
       .then(function (myJson) {
-        console.log(" this data: ", myJson);
+        parseThisWorkoutPoseInfo(myJson);
       });
   };
   useEffect(() => {
     console.log("props.workoutData", thisWorkoutData.Folder_name);
-    let fileLocation = "src/workouts/Sun_Salutation/poseInfo.json"
+    let fileLocation =
+      "src/workouts/" + thisWorkoutData.Folder_name + "/poseInfo.json";
 
     getData(fileLocation);
   }, [thisWorkoutData]);
+
+  function parseThisWorkoutPoseInfo(poseData){
+    setThisWorkoutPoseLandmarks(poseData);
+    console.log("pose data: ", poseData);
+  }
+  useEffect(() => {
+    let poseLandmarksArray = [];
+    for (let i = 0; i < thisWorkoutPoseLandmarks.length; i++) {
+      if (thisWorkoutPoseLandmarks[i].PoseNumber == currentPose) {
+        poseLandmarksArray.push(thisWorkoutPoseLandmarks[i].Landmarks);
+      }
+    }
+    setThisPoseLandmarks(poseLandmarksArray);
+    console.log("this pose landmarks: ", poseLandmarksArray);
+  }, [currentPose]);
+
 
   useEffect(() => {
     const pose = new Pose({
@@ -135,25 +151,43 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('This will run every 10 second!', currentPose);
+    console.log("This will run every 10 second!", currentPose);
     if (currentPose >= thisWorkoutData.NumOfPoses) {
       setCurrentPose(1);
     }
-
+    // if (currentPose >= 3) {
+    //   setCurrentPose(1);
+    // }
   }, [currentPose]);
-    
+
   function updatePoseCount() {
-    setCurrentPose(currentPose => currentPose + 1);
+    setCurrentPose((currentPose) => currentPose + 1);
   }
 
   // console.log("bounding box", boundingBox);
   // console.log("normalized landmarks", normalizedLandmarks);
   // console.log("scores", scores[0], scores[1]);
+  // var imageFileBaseLocation = 'src/workouts/' + props.folderName + '/' + props.poseLocationArray[props.currentPose] + '.png';
 
   return (
     <div className="App">
       <div className="ImageAndOutput">
-        <DispImage currentPose={currentPose} />
+        <div className="ImageContainer">
+          {Object.keys(thisWorkoutData).length > 0 && (
+            // <DispImage currentPose={currentPose} folderName={thisWorkoutData.Folder_name} poseLocationArray={thisWorkoutData.Best_pose_image.split(",")} />
+            <img
+              className="yogaImage"
+              src={
+                "src/workouts/" +
+                thisWorkoutData.Folder_name +
+                "/" +
+                thisWorkoutData.Best_pose_image.split(",")[currentPose] +
+                ".png"
+              }
+              alt="yoga pose"
+            />
+          )}
+        </div>
         <div className="OutputParent">
           <Webcam
             className="webcam"
@@ -175,14 +209,21 @@ function App() {
       </div>
       {/* only call if thisworkoutdata isn't null */}
       {thisWorkoutData && (
-      <CalcAngles 
-        workoutData={thisWorkoutData}
-        currentPose={currentPose}
-        landmarks={currentLandmarks}
-        setBoundingBox={setBoundingBox}
-        normalizedLandmarks={setNormalizedLandmarks}
-        scores={setScores}
-      />)}
+        <CalcAngles
+          workoutData={thisWorkoutData}
+          currentPose={currentPose}
+          landmarks={currentLandmarks}
+          poseLandmarks={thisPoseLandmarks}
+          setBoundingBox={setBoundingBox}
+          normalizedLandmarks={setNormalizedLandmarks}
+          scores={setScores}
+        />
+      )}
+      <div className="ScoreDisplay">
+        <h1>
+          Pose: {currentPose + 1} -  Score: {scores[0]} / {scores[1]}
+        </h1>
+      </div>
       {/* <Data /> */}
     </div>
   );

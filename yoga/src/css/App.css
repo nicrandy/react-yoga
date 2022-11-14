@@ -5,7 +5,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  overflow: hidden;
 }
 #message{
   position: absolute;
@@ -13,24 +14,27 @@ body {
   left: 0;
   top: 0;
 }
-.PoseAndCam{
+.ImageAndOutput{
   position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  border: white 3px;
+  border-style: solid;
 }
 
-.PoseImage{
-  height: 500px;
-}
 /* yoga pose image */
+.imageContainer{
+  width: 50%;
+  height: 50%;
+}
 .yogaImage{
-  position: relative;
-  z-index: 0;
-  left: 0;
-  top: 0;
-  height: 500px;
+  height: auto;
+  max-width: 50%;
+  max-height: 50%;
+  object-fit: contain;
 }
 
 #imageOverlay{
@@ -62,4 +66,3 @@ body {
   height: 100%;
   width: 100%;
 }
-
