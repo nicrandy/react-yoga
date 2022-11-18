@@ -37,7 +37,8 @@ export const CalcAngles = (props) => {
 
   function getTargetLandmarks() {
     for (let i = 0; i < data.length; i++) {
-      if (data[i].PoseNumber == props.currentPose) {
+      // subtract one from current pose since the array starts at 0, but the pose number starts at 1
+      if (data[i].PoseNumber == (props.currentPose)) {
         return convertLandmarkArrayToObject(data[i].Landmarks);
       }
     }

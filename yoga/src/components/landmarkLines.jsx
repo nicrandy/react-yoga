@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from "react";
+import { useTimeout } from "usehooks-ts";
 import { useRef, useState } from "react";
 import "../css/landmarkLines.css";
 
@@ -16,6 +18,15 @@ export const DrawLines = (props) => {
   const [currentBreathingCircleCount, setBreathingCircleCount] = useState(1); // track current number of circles
   const [breathingIn, setBreathingIn] = useState(true); // track if breathing in or out
 
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   // draw the webcam image on the canvas
   if (props.landmarks !== undefined) {
     const canvasElement = canvasRef.current;
@@ -31,10 +42,23 @@ export const DrawLines = (props) => {
     drawConfirmationCircles(canvasRef.current, canvasCtx, props.landmarks);
     breathingExercise(canvasRef.current, canvasCtx, props.landmarks);
   }
+  useEffect(() => {
+    if (breathingIn) {
+      setBreathingCircleCount(currentBreathingCircleCount + 1);
+    } else {
+      setBreathingCircleCount(currentBreathingCircleCount - 1);
+    }
+    if (currentBreathingCircleCount >= 3) {
+      setBreathingIn(false);
+    }
+    if (currentBreathingCircleCount <= 1) {
+      setBreathingIn(true);
+    }
+  }, [seconds]);
 
-  function breathingExercise(canvas, context, landmarks) {
+  function breathingExercise(canvas, canvasCtx, landmarks) {
     const userCanvas = canvas;
-    const userContext = context;
+    const userContext = canvasCtx;
     let currentLandmarksArray = convertLandmarkObjectToArray(landmarks);
     let centerX = parseInt(
       ((currentLandmarksArray[11][0] - currentLandmarksArray[12][0]) / 2 +
@@ -76,23 +100,20 @@ export const DrawLines = (props) => {
         userContext.stroke();
       }
     }
-    setTimeout(() => {
-      if (breathingIn) {
-        setBreathingCircleCount(currentBreathingCircleCount + 1);
-      }
-      else {
-        setBreathingCircleCount(currentBreathingCircleCount - 1);
-      }
-      if (
-        currentBreathingCircleCount >= 3
-      ) {
-        setBreathingIn(false);
-      }
-      if (currentBreathingCircleCount <= 1) {
-        setBreathingIn(true);
-      }
-    }, 1000);
-    console.log("current circle count: " + currentBreathingCircleCount);
+
+    // setInterval(() => {
+    //   if (breathingIn) {
+    //     setBreathingCircleCount(currentBreathingCircleCount + 1);
+    //   } else {
+    //     setBreathingCircleCount(currentBreathingCircleCount - 1);
+    //   }
+    //   if (currentBreathingCircleCount >= 3) {
+    //     setBreathingIn(false);
+    //   }
+    //   if (currentBreathingCircleCount <= 1) {
+    //     setBreathingIn(true);
+    //   }
+    // }, 1000);
   }
 
   function convertLandmarkObjectToArray(landmarks) {
@@ -302,10 +323,11 @@ export const DrawLines = (props) => {
       if (completeConfirmation && startConfirmation) {
         if (canUseConfirmSquares) {
           setCanUseConfirmSquares(false);
+          props.updateWithConfirmation();
         }
         setTimeout(() => {
           setCanUseConfirmSquares(true);
-        }, "1000");
+        }, "2000");
       }
     }
     if (canUseConfirmSquares) {
